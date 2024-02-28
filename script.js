@@ -126,12 +126,51 @@ const gameEngine = function (gameBoardArray = gameBoard.returnGameBoard()) {
     return { markGameBoard };
 }();
 
-const CreatePlayer = function (name, playerSymbol, defaultName) {
-    if (name.trim() === "")
-        name = defaultName
-    return { name, playerSymbol };
-};
+const Players = function () {
 
-const player1 = CreatePlayer("Ganesh", "X", "player1");
-const player2 = CreatePlayer("G", "O", "player2");
+    const CreatePlayer = function (name, playerSymbol, defaultName) {
+        if (name.trim() === "")
+            name = defaultName
+        return { name, playerSymbol };
+    };
+
+    const player1 = CreatePlayer("", "X", "player1");
+    const player2 = CreatePlayer("", "O", "player2");
+
+    const changePlayerName = function () {
+        const player1ChangeButton = document.querySelector(".player1 > button");
+        const player2ChangeButton = document.querySelector(".player2 > button");
+        const player1Input = document.querySelector(".player1 > input");
+        const player2Input = document.querySelector(".player2 > input");
+ 
+        player1ChangeButton.addEventListener("click", () => {
+            player1Input.disabled = false;
+            player1Input.focus()
+        })
+
+        player1Input.addEventListener("change", (event) => {
+            if (player1Input.value.trim() !== "")
+                player1.name = player1Input.value;
+
+            player1Input.disabled = true;
+            player1Input.value = "";
+            player1Input.setAttribute("placeholder", player1.name)
+        })
+
+        player2ChangeButton.addEventListener("click", () => {
+            player2Input.disabled = false;
+            player2Input.focus()
+        })
+
+        player2Input.addEventListener("change", (event) => {
+            if (player2Input.value.trim() !== "")
+                player2.name = player2Input.value;
+
+            player2Input.disabled = true;
+            player2Input.value = "";
+        })
+    }();
+
+    return { player1, player2 };
+}();
 
