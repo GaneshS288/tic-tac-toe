@@ -20,6 +20,7 @@ const gameBoard = function () {
 
     const markGameBoard = function (outerIndex, innerIndex, playerSymbol) {
         gameBoardArray[outerIndex][innerIndex] = playerSymbol;
+        alertWinOrDraw(playerSymbol);
     };
 
     const checkWinOrDraw = function (playerSymbol) {
@@ -93,6 +94,14 @@ const gameBoard = function () {
         checkEmptySquare();
 
         return { win, emptySquarePresent}
+    }
+
+    const alertWinOrDraw = function(playerSymbol) {
+        if (checkWinOrDraw(playerSymbol).win === true)
+        console.log(`you have won ${playerSymbol}`)
+
+        else if (checkWinOrDraw(playerSymbol).emptySquarePresent === false)
+        console.log("It is a draw!")
     }
 
     return { returnGameBoard, markGameBoard, checkWinOrDraw }
