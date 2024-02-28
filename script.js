@@ -56,7 +56,7 @@ const gameBoard = function () {
             }
         }
 
-        function checkCross() {
+        function checkDiagonally() {
             let symbolCount = 0;
 
             for (let i = 0; i < 3; i++) {
@@ -90,7 +90,7 @@ const gameBoard = function () {
 
         checkHorizontally();
         checkVertically();
-        checkCross();
+        checkDiagonally();
         checkEmptySquare();
 
         return { win, emptySquarePresent}
