@@ -78,7 +78,6 @@ const gameEngine = function (gameBoardArray = gameBoard.returnGameBoard()) {
             }
 
             symbolCount === 3 ? win = true : symbolCount = 0;
-
         }
 
         function checkEmptySquare() {
@@ -102,14 +101,29 @@ const gameEngine = function (gameBoardArray = gameBoard.returnGameBoard()) {
     }
 
     const alertWinOrDraw = function (playerSymbol) {
-        if (checkWinOrDraw(playerSymbol).win === true)
-            console.log(`you have won ${playerSymbol}`)
+        const winner = playerSymbol === "X" ? player1.name : player2.name;
 
-        else if (checkWinOrDraw(playerSymbol).emptySquarePresent === false)
-            console.log("It is a draw!")
+        if (checkWinOrDraw(playerSymbol).win === true) {
+            console.log(`you have won ${winner}. Resetting GameBoard`)
+            resetGameBoard();
+        }
+
+        else if (checkWinOrDraw(playerSymbol).emptySquarePresent === false) {
+            console.log("It is a draw! resetting GameBoard")
+            resetGameBoard();
+        }
+
     }
 
-    return {markGameBoard};
+    const resetGameBoard = function () {
+        gameBoardArray.forEach((item) => {
+            item[0] = "";
+            item[1] = "";
+            item[2] = "";
+        })
+    }
+
+    return { markGameBoard };
 }();
 
 const CreatePlayer = function (name, playerSymbol, defaultName) {
