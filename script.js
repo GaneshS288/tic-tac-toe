@@ -18,6 +18,11 @@ const gameBoard = function () {
         return gameBoardArray;
     }
 
+    return { returnGameBoard }
+}();
+
+const gameEngine = function (gameBoardArray = gameBoard.returnGameBoard()) {
+
     const markGameBoard = function (outerIndex, innerIndex, playerSymbol) {
         gameBoardArray[outerIndex][innerIndex] = playerSymbol;
         alertWinOrDraw(playerSymbol);
@@ -93,18 +98,18 @@ const gameBoard = function () {
         checkDiagonally();
         checkEmptySquare();
 
-        return { win, emptySquarePresent}
+        return { win, emptySquarePresent }
     }
 
-    const alertWinOrDraw = function(playerSymbol) {
+    const alertWinOrDraw = function (playerSymbol) {
         if (checkWinOrDraw(playerSymbol).win === true)
-        console.log(`you have won ${playerSymbol}`)
+            console.log(`you have won ${playerSymbol}`)
 
         else if (checkWinOrDraw(playerSymbol).emptySquarePresent === false)
-        console.log("It is a draw!")
+            console.log("It is a draw!")
     }
 
-    return { returnGameBoard, markGameBoard, checkWinOrDraw }
+    return {markGameBoard};
 }();
 
 const CreatePlayer = function (name, playerSymbol, defaultName) {
