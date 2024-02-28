@@ -126,6 +126,16 @@ const gameEngine = function (gameBoardArray = gameBoard.returnGameBoard()) {
     return { markGameBoard };
 }();
 
+const domReference = function () {
+    let gameBoardDOMArray = Array.from(document.querySelectorAll(".gameBoard"));
+    gameBoardDOMArray = [gameBoardDOMArray.slice(0, 3), gameBoardDOMArray.slice(3, 6), gameBoardDOMArray.slice(6)];
+
+    let playerInputDOM = Array.from(document.querySelectorAll("input"));
+    let changeNameButtonDOM = Array.from(document.querySelectorAll("button"));
+
+    return {gameBoardDOMArray, playerInputDOM, changeNameButtonDOM}
+}();
+
 const Players = function () {
 
     const CreatePlayer = function (name, playerSymbol, defaultName) {
@@ -138,43 +148,38 @@ const Players = function () {
     const player2 = CreatePlayer("", "O", "player2");
 
     const changePlayerName = function () {
-        const player1ChangeButton = document.querySelector(".player1 > button");
-        const player2ChangeButton = document.querySelector(".player2 > button");
-        const player1Input = document.querySelector(".player1 > input");
-        const player2Input = document.querySelector(".player2 > input");
+        const player1button = domReference.changeNameButtonDOM[0];
+        const player2button = domReference.changeNameButtonDOM[1];
+        const player1Input = domReference.playerInputDOM[0];
+        const player2Input = domReference.playerInputDOM[1];
 
-        player1ChangeButton.addEventListener("click", () => {
-            player1Input.disabled ? player1Input.disabled = false : player1Input.disabled = true;
-            player1Input.focus()
-        })
+        function buttonAddEventListener(index) {
+            let input = domReference.playerInputDOM[index];
+            input.disabled ? input.disabled = false : input.disabled = true;
+            input.focus();
+        }
 
-        player1Input.addEventListener("change", (event) => {
-            if (player1Input.value.trim() !== "")
-                player1.name = player1Input.value;
+        player1button.addEventListener("click", () => buttonAddEventListener(0))
+        player2button.addEventListener("click", () => buttonAddEventListener(1))
 
-            player1Input.disabled = true;
-            player1Input.value = "";
-            printPlayerName();
-        })
+        function inputAddEventListener(index, player) {
+            let input = domReference.playerInputDOM[index];
 
-        player2ChangeButton.addEventListener("click", () => {
-            player2Input.disabled ? player2Input.disabled = false : player2Input.disabled = true;
-            player2Input.focus()
-        })
+            if (input.value.trim() !== "")
+                player["name"] = input.value;
 
-        player2Input.addEventListener("change", (event) => {
-            if (player2Input.value.trim() !== "")
-                player2.name = player2Input.value;
+                input.disabled = true;
+                input.value = "";
+                printPlayerName();
+        }
 
-            player2Input.disabled = true;
-            player2Input.value = "";
-            printPlayerName();
-        })
+        player1Input.addEventListener("change", () => inputAddEventListener(0, player1))
+        player2Input.addEventListener("change", () => inputAddEventListener(1, player2))
     }();
 
     const printPlayerName = function () {
-        const player1Input = document.querySelector(".player1 > input");
-        const player2Input = document.querySelector(".player2 > input");
+        const player1Input = domReference.playerInputDOM[0];
+        const player2Input = domReference.playerInputDOM[1];
 
         player1Input.setAttribute("placeholder", player1.name);
         player2Input.setAttribute("placeholder", player2.name);
@@ -185,21 +190,3 @@ const Players = function () {
     return { player1, player2 };
 }();
 
-
-
-const IIFE_Function = function() {
-    const firstFunctionExpression = function(){
-        secondFunctionExpression(); //this works
-    }
-    
-    
-    button.addEventListener("click", () => {
-        secondFunctionExpression(); //Throws error saying this is not a function at....
-    })
-    
-    const secondFunctionExpression = function() { 
-        console.log("working!");
-    }
-    
-        return {firstFunctionExpression}
-    }();
