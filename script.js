@@ -101,7 +101,7 @@ const gameEngine = function (gameBoardArray = gameBoard.returnGameBoard()) {
     }
 
     const alertWinOrDraw = function (playerSymbol) {
-        const winner = playerSymbol === "X" ? player1.name : player2.name;
+        const winner = playerSymbol === "X" ? Players.player1.name : Players.player2.name;
 
         if (checkWinOrDraw(playerSymbol).win === true) {
             console.log(`you have won ${winner}. Resetting GameBoard`)
@@ -133,7 +133,7 @@ const domReference = function () {
     let playerInputDOM = Array.from(document.querySelectorAll("input"));
     let changeNameButtonDOM = Array.from(document.querySelectorAll("button"));
 
-    return {gameBoardDOMArray, playerInputDOM, changeNameButtonDOM}
+    return { gameBoardDOMArray, playerInputDOM, changeNameButtonDOM }
 }();
 
 const Players = function () {
@@ -168,9 +168,9 @@ const Players = function () {
             if (input.value.trim() !== "")
                 player["name"] = input.value;
 
-                input.disabled = true;
-                input.value = "";
-                printPlayerName();
+            input.disabled = true;
+            input.value = "";
+            printPlayerName();
         }
 
         player1Input.addEventListener("change", () => inputAddEventListener(0, player1))
@@ -190,3 +190,33 @@ const Players = function () {
     return { player1, player2 };
 }();
 
+const game = function () {
+    let currentPlayer = Players.player1;
+    let gameBoardSquares = domReference.gameBoardDOMArray;
+
+    gameBoardSquares.forEach((item) => {
+        item.forEach((element) => {
+            element.addEventListener("click", (event) => {
+                let symbol = currentPlayer.playerSymbol;
+    
+                event.target.textContent = symbol;
+                
+                gameEngine.markGameBoard(getIndices(event)[0], getIndices(event)[1], symbol)
+
+                currentPlayer = currentPlayer === Players.player1 ? Players.player2 : Players.player1;
+            })
+        })  
+    });
+
+    
+    const getIndices = function(event) {
+        let outerIndex;
+        let innerIndex;
+
+        gameBoardSquares.forEach((item, index) => item.includes(event.target) ? outerIndex = index : "null");
+
+        innerIndex = gameBoardSquares[outerIndex].findIndex((item) => item === event.target);
+
+        return [outerIndex, innerIndex];
+    }
+}();
