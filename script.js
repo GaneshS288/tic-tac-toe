@@ -197,19 +197,20 @@ const game = function () {
     gameBoardSquares.forEach((item) => {
         item.forEach((element) => {
             element.addEventListener("click", (event) => {
-                let symbol = currentPlayer.playerSymbol;
-    
-                event.target.textContent = symbol;
-                
-                gameEngine.markGameBoard(getIndices(event)[0], getIndices(event)[1], symbol)
+                if (event.target.textContent !== "X" && event.target.textContent !== "O") {
+                    let symbol = currentPlayer.playerSymbol;
 
-                currentPlayer = currentPlayer === Players.player1 ? Players.player2 : Players.player1;
+                    event.target.textContent = symbol;
+
+                    gameEngine.markGameBoard(getIndices(event)[0], getIndices(event)[1], symbol)
+
+                    currentPlayer = currentPlayer === Players.player1 ? Players.player2 : Players.player1;
+                }
             })
-        })  
+        })
     });
 
-    
-    const getIndices = function(event) {
+    const getIndices = function (event) {
         let outerIndex;
         let innerIndex;
 
