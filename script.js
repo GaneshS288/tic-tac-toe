@@ -6,27 +6,104 @@
 
 
 
-const PlayGame = function() {
-    const gameBoard = [
-        ["","",""],
-        ["","",""],
-        ["","",""]
+const gameBoard = function () {
+
+    const gameBoardArray = [
+        ["", "", ""],
+        ["", "", ""],
+        ["", "", ""]
     ];
 
-    const returnGameBoard = function() {
-        return gameBoard;
+    const returnGameBoard = function () {
+        return gameBoardArray;
     }
 
-    const markGameBoard = function(outerIndex, innerIndex, playerSymbol) {
-        gameBoard[outerIndex][innerIndex] = playerSymbol;
+    const markGameBoard = function (outerIndex, innerIndex, playerSymbol) {
+        gameBoardArray[outerIndex][innerIndex] = playerSymbol;
     };
 
-    return {returnGameBoard, markGameBoard}
+    const checkWinOrDraw = function (playerSymbol) {
+        let win = false;
+        let emptySquarePresent;
+
+        //fix bug that makes it set win to true when first encounter matches playerSymbol
+        function checkHorizontally() {
+            let symbolCount = 0;
+
+            gameBoardArray.forEach((item) => {
+                for (let i = 0; i < 3; i++) {
+                    if (item[i] === playerSymbol)
+                        symbolCount++
+                }
+
+                symbolCount === 3 ? win = true : symbolCount = 0;
+            })
+        }
+
+        function checkVertically() {
+            /*here j is the outer index and i is the inner index because 
+            we need the inner index to remain same while outer index changes in the inner loop*/
+            let symbolCount = 0;
+
+            for (let i = 0; i < 3; i++) {
+                for (let j = 0; j < 3; j++) {
+                    if (gameBoardArray[j][i] === playerSymbol)
+                        symbolCount++
+                }
+
+                symbolCount === 3 ? win = true : symbolCount = 0;
+            }
+        }
+
+        function checkCross() {
+            let symbolCount = 0;
+
+            for (let i = 0; i < 3; i++) {
+                if (gameBoardArray[i][i] === playerSymbol)
+                    symbolCount++
+            }
+
+            symbolCount === 3 ? win = true : symbolCount = 0;
+
+            for (let i = 0; i < 3; i++) {
+                let j = 2 - i;
+                if (gameBoardArray[i][j] === playerSymbol)
+                    symbolCount++
+            }
+
+            symbolCount === 3 ? win = true : symbolCount = 0;
+
+        }
+
+        function checkEmptySquare() {
+            for (let i = 0; i < 3; i++) {
+                if (gameBoardArray[i].includes("")) {
+                    emptySquarePresent = true;
+                    break;
+                }
+
+                else
+                    emptySquarePresent = false;
+            }
+        }
+
+        checkHorizontally();
+        checkVertically();
+        checkCross();
+        checkEmptySquare();
+
+        return { win, emptySquarePresent}
+    }
+
+    return { returnGameBoard, markGameBoard, checkWinOrDraw }
 }();
 
-console.table(PlayGame.returnGameBoard());
+const CreatePlayer = function (name, playerSymbol, defaultName) {
+    if (name.trim() === "")
+        name = defaultName
+    return { name, playerSymbol };
+};
 
-PlayGame.markGameBoard(1,1,"X");
-PlayGame.markGameBoard(1,2,"X");
+const player1 = CreatePlayer("Ganesh", "X", "player1");
+const player2 = CreatePlayer("G", "O", "player2");
 
-console.table(PlayGame.returnGameBoard());
