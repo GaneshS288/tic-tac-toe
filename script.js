@@ -142,7 +142,7 @@ const Players = function () {
         const player2ChangeButton = document.querySelector(".player2 > button");
         const player1Input = document.querySelector(".player1 > input");
         const player2Input = document.querySelector(".player2 > input");
- 
+
         player1ChangeButton.addEventListener("click", () => {
             player1Input.disabled = false;
             player1Input.focus()
@@ -154,7 +154,7 @@ const Players = function () {
 
             player1Input.disabled = true;
             player1Input.value = "";
-            player1Input.setAttribute("placeholder", player1.name)
+            printPlayerName();
         })
 
         player2ChangeButton.addEventListener("click", () => {
@@ -168,8 +168,17 @@ const Players = function () {
 
             player2Input.disabled = true;
             player2Input.value = "";
+            printPlayerName();
         })
     }();
+
+    function printPlayerName() {
+        const player1Input = document.querySelector(".player1 > input");
+        const player2Input = document.querySelector(".player2 > input");
+
+        player1Input.setAttribute("placeholder", player1.name);
+        player2Input.setAttribute("placeholder", player2.name);
+    }
 
     return { player1, player2 };
 }();
