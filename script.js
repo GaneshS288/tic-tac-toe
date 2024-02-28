@@ -144,7 +144,7 @@ const Players = function () {
         const player2Input = document.querySelector(".player2 > input");
 
         player1ChangeButton.addEventListener("click", () => {
-            player1Input.disabled = false;
+            player1Input.disabled ? player1Input.disabled = false : player1Input.disabled = true;
             player1Input.focus()
         })
 
@@ -158,7 +158,7 @@ const Players = function () {
         })
 
         player2ChangeButton.addEventListener("click", () => {
-            player2Input.disabled = false;
+            player2Input.disabled ? player2Input.disabled = false : player2Input.disabled = true;
             player2Input.focus()
         })
 
@@ -172,14 +172,34 @@ const Players = function () {
         })
     }();
 
-    function printPlayerName() {
+    const printPlayerName = function () {
         const player1Input = document.querySelector(".player1 > input");
         const player2Input = document.querySelector(".player2 > input");
 
         player1Input.setAttribute("placeholder", player1.name);
         player2Input.setAttribute("placeholder", player2.name);
-    }
+    };
+
+    printPlayerName();
 
     return { player1, player2 };
 }();
 
+
+
+const IIFE_Function = function() {
+    const firstFunctionExpression = function(){
+        secondFunctionExpression(); //this works
+    }
+    
+    
+    button.addEventListener("click", () => {
+        secondFunctionExpression(); //Throws error saying this is not a function at....
+    })
+    
+    const secondFunctionExpression = function() { 
+        console.log("working!");
+    }
+    
+        return {firstFunctionExpression}
+    }();
