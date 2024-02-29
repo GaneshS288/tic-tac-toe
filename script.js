@@ -1,11 +1,3 @@
-/* - make a function that stores the gameBoard array and allows a way to put x and o inside the array
-   - play objects should have names, a symbol(x,o) and a method to put values on the gameboard 
-   - gameboard should be able to recognize when a player wins and the array is full and no one has won 
-   - 
- */
-
-
-
 const gameBoard = function () {
 
     const gameBoardArray = [
@@ -18,10 +10,12 @@ const gameBoard = function () {
         return gameBoardArray;
     }
 
-    return { returnGameBoard }
+    return { returnGameBoard };
 }();
 
 const gameEngine = function (gameBoardArray = gameBoard.returnGameBoard()) {
+
+    let gameStatus;
 
     const markGameBoard = function (outerIndex, innerIndex, playerSymbol) {
         gameBoardArray[outerIndex][innerIndex] = playerSymbol;
@@ -32,7 +26,6 @@ const gameEngine = function (gameBoardArray = gameBoard.returnGameBoard()) {
         let win = false;
         let emptySquarePresent;
 
-        //fix bug that makes it set win to true when first encounter matches playerSymbol
         function checkHorizontally() {
             let symbolCount = 0;
 
@@ -105,14 +98,17 @@ const gameEngine = function (gameBoardArray = gameBoard.returnGameBoard()) {
 
         if (checkWinOrDraw(playerSymbol).win === true) {
             console.log(`you have won ${winner}. Resetting GameBoard`)
+            gameStatus = "Win";
             resetGameBoard();
         }
 
         else if (checkWinOrDraw(playerSymbol).emptySquarePresent === false) {
             console.log("It is a draw! resetting GameBoard")
+            gameStatus = "Draw";
             resetGameBoard();
         }
 
+        return gameStatus;
     }
 
     const resetGameBoard = function () {
@@ -123,7 +119,7 @@ const gameEngine = function (gameBoardArray = gameBoard.returnGameBoard()) {
         })
     }
 
-    return { markGameBoard };
+    return {markGameBoard, alertWinOrDraw, gameStatus};
 }();
 
 const domReference = function () {
@@ -190,19 +186,23 @@ const Players = function () {
     return { player1, player2 };
 }();
 
-const game = function () {
+const playGame = function () {
     let currentPlayer = Players.player1;
+    let gameStatus = "";
     let gameBoardSquares = domReference.gameBoardDOMArray;
 
     gameBoardSquares.forEach((item) => {
         item.forEach((element) => {
             element.addEventListener("click", (event) => {
-                if (event.target.textContent !== "X" && event.target.textContent !== "O") {
+                if (event.target.textContent !== "X" && event.target.textContent !== "O" 
+                && gameEngine.gameStatus !== "Win") {
                     let symbol = currentPlayer.playerSymbol;
 
                     event.target.textContent = symbol;
 
-                    gameEngine.markGameBoard(getIndices(event)[0], getIndices(event)[1], symbol)
+                    gameEngine.markGameBoard(getIndices(event)[0], getIndices(event)[1], symbol);
+                    console.log(gameEngine["gameStatus"])
+                    gameEngine["gameStatus"] = gameEngine.alertWinOrDraw(symbol);
 
                     currentPlayer = currentPlayer === Players.player1 ? Players.player2 : Players.player1;
                 }
@@ -219,5 +219,11 @@ const game = function () {
         innerIndex = gameBoardSquares[outerIndex].findIndex((item) => item === event.target);
 
         return [outerIndex, innerIndex];
+    }
+
+    const setBoardSquaresEmpty = function() {
+        const boardSquares = domReference.gameBoardDOMArray;
+
+        boardSquares.forEach((item) => item.textContent = "");
     }
 }();
