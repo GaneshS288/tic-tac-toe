@@ -98,13 +98,13 @@ const gameEngine = function (gameBoardArray = gameBoard.returnGameBoard()) {
 
         if (checkWinOrDraw(playerSymbol).win === true) {
             console.log(`you have won ${winner}. Resetting GameBoard`)
-            gameStatus = "Win";
+            gameEngine.gameStatus = "Win";
             resetGameBoard();
         }
 
         else if (checkWinOrDraw(playerSymbol).emptySquarePresent === false) {
             console.log("It is a draw! resetting GameBoard")
-            gameStatus = "Draw";
+            gameEngine.gameStatus = "Draw";
             resetGameBoard();
         }
 
@@ -127,9 +127,10 @@ const domReference = function () {
     gameBoardDOMArray = [gameBoardDOMArray.slice(0, 3), gameBoardDOMArray.slice(3, 6), gameBoardDOMArray.slice(6)];
 
     let playerInputDOM = Array.from(document.querySelectorAll("input"));
-    let changeNameButtonDOM = Array.from(document.querySelectorAll("button"));
+    let changeNameButtonDOM = Array.from(document.querySelectorAll(".changeName"));
+    let playAgainButton = document.querySelector(".playAgain");
 
-    return { gameBoardDOMArray, playerInputDOM, changeNameButtonDOM }
+    return { gameBoardDOMArray, playerInputDOM, changeNameButtonDOM, playAgainButton}
 }();
 
 const Players = function () {
@@ -188,8 +189,8 @@ const Players = function () {
 
 const playGame = function () {
     let currentPlayer = Players.player1;
-    let gameStatus = "";
     let gameBoardSquares = domReference.gameBoardDOMArray;
+    let playAgainButton = domReference.playAgainButton;
 
     gameBoardSquares.forEach((item) => {
         item.forEach((element) => {
@@ -201,8 +202,8 @@ const playGame = function () {
                     event.target.textContent = symbol;
 
                     gameEngine.markGameBoard(getIndices(event)[0], getIndices(event)[1], symbol);
-                    console.log(gameEngine["gameStatus"])
-                    gameEngine["gameStatus"] = gameEngine.alertWinOrDraw(symbol);
+                
+                    gameEngine.alertWinOrDraw(symbol);
 
                     currentPlayer = currentPlayer === Players.player1 ? Players.player2 : Players.player1;
                 }
@@ -222,8 +223,13 @@ const playGame = function () {
     }
 
     const setBoardSquaresEmpty = function() {
-        const boardSquares = domReference.gameBoardDOMArray;
-
-        boardSquares.forEach((item) => item.textContent = "");
+        gameBoardSquares.forEach((item) => {
+            item.forEach((element) => element.textContent = "");
+        });
     }
+
+    playAgainButton.addEventListener("click", setBoardSquaresEmpty)
+    playAgainButton.addEventListener("click", () => {
+        gameEngine.gameStatus = "";
+        currentPlayer = Players.player1} );
 }();
