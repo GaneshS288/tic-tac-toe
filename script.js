@@ -97,13 +97,13 @@ const gameEngine = function (gameBoardArray = gameBoard.returnGameBoard()) {
         const winner = playerSymbol === "X" ? Players.player1.name : Players.player2.name;
 
         if (checkWinOrDraw(playerSymbol).win === true) {
-            console.log(`you have won ${winner}. Resetting GameBoard`)
+            domReference.gameResult.textContent = `${winner} won!`;
             gameEngine.gameStatus = "Win";
             resetGameBoard();
         }
 
         else if (checkWinOrDraw(playerSymbol).emptySquarePresent === false) {
-            console.log("It is a draw! resetting GameBoard")
+            domReference.gameResult.textContent = "Draw!"
             gameEngine.gameStatus = "Draw";
             resetGameBoard();
         }
@@ -119,7 +119,7 @@ const gameEngine = function (gameBoardArray = gameBoard.returnGameBoard()) {
         })
     }
 
-    return {markGameBoard, alertWinOrDraw, gameStatus};
+    return { markGameBoard, alertWinOrDraw, gameStatus };
 }();
 
 const domReference = function () {
@@ -130,7 +130,9 @@ const domReference = function () {
     let changeNameButtonDOM = Array.from(document.querySelectorAll(".changeName"));
     let playAgainButton = document.querySelector(".playAgain");
 
-    return { gameBoardDOMArray, playerInputDOM, changeNameButtonDOM, playAgainButton}
+    let gameResult = document.querySelector(".gameResult");
+
+    return { gameBoardDOMArray, playerInputDOM, changeNameButtonDOM, playAgainButton, gameResult }
 }();
 
 const Players = function () {
@@ -195,14 +197,14 @@ const playGame = function () {
     gameBoardSquares.forEach((item) => {
         item.forEach((element) => {
             element.addEventListener("click", (event) => {
-                if (event.target.textContent !== "X" && event.target.textContent !== "O" 
-                && gameEngine.gameStatus !== "Win") {
+                if (event.target.textContent !== "X" && event.target.textContent !== "O"
+                    && gameEngine.gameStatus !== "Win") {
                     let symbol = currentPlayer.playerSymbol;
 
                     event.target.textContent = symbol;
 
                     gameEngine.markGameBoard(getIndices(event)[0], getIndices(event)[1], symbol);
-                
+
                     gameEngine.alertWinOrDraw(symbol);
 
                     currentPlayer = currentPlayer === Players.player1 ? Players.player2 : Players.player1;
@@ -222,7 +224,7 @@ const playGame = function () {
         return [outerIndex, innerIndex];
     }
 
-    const setBoardSquaresEmpty = function() {
+    const setBoardSquaresEmpty = function () {
         gameBoardSquares.forEach((item) => {
             item.forEach((element) => element.textContent = "");
         });
@@ -231,5 +233,6 @@ const playGame = function () {
     playAgainButton.addEventListener("click", setBoardSquaresEmpty)
     playAgainButton.addEventListener("click", () => {
         gameEngine.gameStatus = "";
-        currentPlayer = Players.player1} );
+        currentPlayer = Players.player1
+    });
 }();
