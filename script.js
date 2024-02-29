@@ -98,12 +98,16 @@ const gameEngine = function (gameBoardArray = gameBoard.returnGameBoard()) {
 
         if (checkWinOrDraw(playerSymbol).win === true) {
             domReference.gameResult.textContent = `${winner} won!`;
+            domReference.gameResult.style.display = "block";
+
             gameEngine.gameStatus = "Win";
             resetGameBoard();
         }
 
         else if (checkWinOrDraw(playerSymbol).emptySquarePresent === false) {
             domReference.gameResult.textContent = "Draw!"
+            domReference.gameResult.style.display = "block";
+
             gameEngine.gameStatus = "Draw";
             resetGameBoard();
         }
@@ -234,5 +238,6 @@ const playGame = function () {
     playAgainButton.addEventListener("click", () => {
         gameEngine.gameStatus = "";
         currentPlayer = Players.player1
+        domReference.gameResult.style.display = "none";
     });
 }();
