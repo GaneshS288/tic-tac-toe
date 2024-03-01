@@ -98,15 +98,13 @@ const gameEngine = function (gameBoardArray = gameBoard.returnGameBoard()) {
 
         if (checkWinOrDraw(playerSymbol).win === true) {
             domReference.gameResult.textContent = `${winner} won!`;
-            domReference.gameResult.style.display = "block";
 
             gameEngine.gameStatus = "Win";
             resetGameBoard();
         }
 
         else if (checkWinOrDraw(playerSymbol).emptySquarePresent === false) {
-            domReference.gameResult.textContent = "Draw!"
-            domReference.gameResult.style.display = "block";
+            domReference.gameResult.textContent = "Draw!";
 
             gameEngine.gameStatus = "Draw";
             resetGameBoard();
@@ -123,7 +121,7 @@ const gameEngine = function (gameBoardArray = gameBoard.returnGameBoard()) {
         })
     }
 
-    return { markGameBoard, alertWinOrDraw, gameStatus };
+    return { markGameBoard, alertWinOrDraw, gameStatus, resetGameBoard };
 }();
 
 const domReference = function () {
@@ -208,10 +206,13 @@ const playGame = function () {
                     event.target.textContent = symbol;
 
                     gameEngine.markGameBoard(getIndices(event)[0], getIndices(event)[1], symbol);
-
+                    
+                    
                     gameEngine.alertWinOrDraw(symbol);
 
                     currentPlayer = currentPlayer === Players.player1 ? Players.player2 : Players.player1;
+
+                    printPlayerTurn();
                 }
             })
         })
@@ -232,12 +233,21 @@ const playGame = function () {
         gameBoardSquares.forEach((item) => {
             item.forEach((element) => element.textContent = "");
         });
-    }
+    };
+
+    const printPlayerTurn = function() {
+        if (gameEngine.gameStatus == "Win" || gameEngine.gameStatus == "Draw")
+        return;
+
+        domReference.gameResult.textContent = `${currentPlayer.name} turn`;
+    };
 
     playAgainButton.addEventListener("click", setBoardSquaresEmpty)
     playAgainButton.addEventListener("click", () => {
         gameEngine.gameStatus = "";
+        gameEngine.resetGameBoard();
         currentPlayer = Players.player1
-        domReference.gameResult.style.display = "none";
+        printPlayerTurn();
     });
+    printPlayerTurn();
 }();
